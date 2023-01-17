@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 @Setter
 public class PasteResponseDTO {
     String textData;
-    String hashLink;
+    String id;
     AccessType accessType;
     Timestamp expireDate;
 }

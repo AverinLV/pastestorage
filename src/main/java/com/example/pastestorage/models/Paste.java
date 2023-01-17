@@ -11,8 +11,8 @@ import java.sql.Timestamp;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Paste {
     @Id
-    @Column(name = "hash_code")
-    String hashCode;
+    @Column(name = "id")
+    String id;
 
     @Column(name = "text_data")
     String textData;

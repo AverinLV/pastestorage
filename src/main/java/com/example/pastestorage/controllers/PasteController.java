@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class PasteController {
     private final PasteService pasteService;
     private final ModelMapper modelMapper;
-    @GetMapping("/{hash}")
-    public PasteResponseDTO getPaste(@PathVariable("hash") String hash) {
+    @GetMapping("/{id}")
+    public PasteResponseDTO getPaste(@PathVariable("hash") String id) {
         return null;
     }
     @PostMapping()
