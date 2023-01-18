@@ -1,6 +1,7 @@
 package com.example.pastestorage.dto.request;
 
 import com.example.pastestorage.types.AccessType;
+import com.example.pastestorage.types.LifetimeType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,6 @@ import java.time.temporal.ChronoUnit;
 public class PasteRequestDTO {
     String textData;
     int lifetime;
-    ChronoUnit lifetimeType;
+    LifetimeType lifetimeType;
     AccessType accessType;
 }

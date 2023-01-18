@@ -13,14 +13,13 @@ import java.time.temporal.ChronoUnit;
 @Mapper(componentModel = "spring")
 public interface PasteMapper {
     PasteResponseDTO toResponseDTO(Paste paste);
-    // source = "." can make use source object by parameter.
-    @Mapping(target = "expireDate", source = ".", qualifiedByName = "toExpireDate")
+    @Mapping(target = "expireDate", source = ".", qualifiedByName = "toExpireDate") // source = "." can make use source object by parameter.
     Paste toPaste(PasteRequestDTO pasteRequestDTO);
 
     @Named("toExpireDate")
     default Instant convertToExpireDate(PasteRequestDTO pasteRequestDTO) {
         int lifetime = pasteRequestDTO.getLifetime();
-        ChronoUnit lifetimeType = pasteRequestDTO.getLifetimeType();
+        ChronoUnit lifetimeType = ChronoUnit.valueOf(pasteRequestDTO.getLifetimeType().toString());
         Instant currentTime = Instant.now();
         Instant expireDate = currentTime.plus(lifetime, lifetimeType);
         return expireDate;
