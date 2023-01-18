@@ -4,7 +4,7 @@ import com.example.pastestorage.types.AccessType;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -12,5 +12,5 @@ public class PasteResponseDTO {
     String textData;
     String id;
     AccessType accessType;
-    Timestamp expireDate;
+    Instant expireDate;
 }

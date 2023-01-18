@@ -4,7 +4,7 @@ import com.example.pastestorage.types.AccessType;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Table(name = "paste")
@@ -18,7 +18,7 @@ public class Paste {
     String textData;
 
     @Column(name = "expire_date")
-    Timestamp expireDate;
+    Instant expireDate;
 
     @Column(name = "access_type")
     @Enumerated(EnumType.STRING)
