@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -18,12 +19,12 @@ public class PasteService {
 
     @Transactional
     public void save(Paste paste) {
-        enrichPaste(paste);
         pasteRepository.save(paste);
     }
 
-    private void enrichPaste(Paste paste) {
-        paste.setId(UUID.randomUUID().toString());
+    public Paste get(UUID id) {
+        Optional<Paste> foundPaste = pasteRepository.findById(id);
+        return foundPaste.orElse(null);
     }
 
 }

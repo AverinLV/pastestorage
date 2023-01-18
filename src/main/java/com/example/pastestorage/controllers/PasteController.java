@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -18,8 +20,11 @@ public class PasteController {
     private final PasteService pasteService;
     private final PasteMapper pasteMapper;
     @GetMapping("/{id}")
-    public PasteResponseDTO getPaste(@PathVariable("hash") String id) {
-        return null;
+    public PasteResponseDTO getPaste(@PathVariable("id") String id) {
+        UUID uuid = UUID.fromString(id);
+        Paste foundPaste = pasteService.get(uuid);
+        PasteResponseDTO pasteResponseDTO = pasteMapper.toResponseDTO(foundPaste);
+        return pasteResponseDTO;
     }
     @PostMapping()
     public ResponseEntity<HttpStatus> createPaste(@RequestBody PasteRequestDTO pasteRequestDTO) {
