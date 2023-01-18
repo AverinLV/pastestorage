@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public class PasteService {
     }
 
     public Paste get(UUID id) {
-        Optional<Paste> foundPaste = pasteRepository.findById(id);
+        Optional<Paste> foundPaste = pasteRepository.findByIdAndExpireDateGreaterThan(id, Instant.now());
         return foundPaste.orElse(null);
     }
 
