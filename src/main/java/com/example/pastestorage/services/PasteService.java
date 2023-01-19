@@ -13,19 +13,23 @@ import java.util.UUID;
 
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PasteService {
     private final PasteRepository pasteRepository;
 
     @Transactional
     public void save(Paste paste) {
+        enrichPaste(paste);
         pasteRepository.save(paste);
     }
-
+    @Transactional(readOnly = true)
     public Paste get(UUID id) {
         Optional<Paste> foundPaste = pasteRepository.findByIdAndExpireDateGreaterThan(id, Instant.now());
         return foundPaste.orElse(null);
+    }
+
+    public void enrichPaste(Paste paste) {
+        paste.setCreatedAt(Instant.now());
     }
 
 }

@@ -23,6 +23,9 @@ public class Paste {
     @Column(name = "expire_date")
     Instant expireDate;
 
+    @Column(name = "created_at")
+    Instant createdAt;
+
     @Column(name = "access_type")
     @Enumerated(EnumType.STRING)
     AccessType accessType;

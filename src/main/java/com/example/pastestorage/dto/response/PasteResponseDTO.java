@@ -13,4 +13,6 @@ public class PasteResponseDTO {
     String id;
     AccessType accessType;
     Instant expireDate;
+    Instant createdAt;
+
 }
