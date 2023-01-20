@@ -2,8 +2,13 @@ package com.example.pastestorage.services;
 
 import com.example.pastestorage.models.Paste;
 import com.example.pastestorage.repositories.PasteRepository;
+import com.example.pastestorage.types.AccessType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +33,17 @@ public class PasteService {
         return foundPaste.orElse(null);
     }
 
-    public void enrichPaste(Paste paste) {
+    @Transactional(readOnly = true)
+    public Page<Paste> getPublic(int page, int size) {
+        Pageable paging = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Paste> pagePastes = pasteRepository.findByAccessTypeAndExpireDateGreaterThan(
+                AccessType.PUBLIC,
+                Instant.now(),
+                paging);
+        return pagePastes;
+    }
+
+    private void enrichPaste(Paste paste) {
         paste.setCreatedAt(Instant.now());
     }
 
