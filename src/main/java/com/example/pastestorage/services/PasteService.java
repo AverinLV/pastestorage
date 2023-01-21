@@ -34,8 +34,8 @@ public class PasteService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Paste> getPublic(int page, int size) {
-        Pageable paging = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+    public Page<Paste> getPublic(int page, int size, String orderBy, String orderDirection) {
+        Pageable paging = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(orderDirection), orderBy));
         Page<Paste> pagePastes = pasteRepository.findByAccessTypeAndExpireDateGreaterThan(
                 AccessType.PUBLIC,
                 Instant.now(),
