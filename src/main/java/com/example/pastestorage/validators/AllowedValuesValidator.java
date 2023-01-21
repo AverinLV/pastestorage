@@ -21,7 +21,7 @@ public class AllowedValuesValidator implements ConstraintValidator<AllowedValues
         Boolean valid = value == null || this.allowable.contains(value);
         if (!valid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(message.concat(this.allowable.toString()))
+            context.buildConstraintViolationWithTemplate(propName + " " + message.concat(this.allowable.toString()))
                     .addPropertyNode(this.propName).addConstraintViolation();
         }
         return valid;
