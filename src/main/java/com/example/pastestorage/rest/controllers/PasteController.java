@@ -1,4 +1,4 @@
-package com.example.pastestorage.controllers;
+package com.example.pastestorage.rest.controllers;
 
 import com.example.pastestorage.dto.mapper.PagePastesMapper;
 import com.example.pastestorage.dto.mapper.PasteMapper;
