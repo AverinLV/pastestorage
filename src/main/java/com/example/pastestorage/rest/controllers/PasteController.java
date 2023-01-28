@@ -50,6 +50,11 @@ public class PasteController {
         return new ResponseEntity<>(pagePastesResponseDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/ping")
+    public ResponseEntity<Void> ping() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<PasteResponseDTO> getPaste(@PathVariable("id") String id) {
         UUID uuid = UUID.fromString(id);
