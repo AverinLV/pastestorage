@@ -4,14 +4,23 @@ import com.example.pastestorage.dto.response.PagePastesResponseDTO;
 import com.example.pastestorage.models.Paste;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 @Mapper(
         componentModel = "spring",
         uses = {PasteMapper.class})
 public interface PagePastesMapper {
-    @Mapping(target = "pastes", source = "content")
+    @Mapping(target = "pastes", source = ".", qualifiedByName = "toPastes")
     @Mapping(target = "currentPage", source = "number")
     @Mapping(target = "totalItems", source = "totalElements")
     PagePastesResponseDTO toPagePastesResponseDTO(Page<Paste> pastePage);
+
+    @Named("toPastes")
+    default List<Paste> convertToPastes(Page<Paste> pastePage) {
+        List<Paste> pasteList = pastePage.getContent();
+        return pasteList;
+    }
 }
