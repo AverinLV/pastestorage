@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.time.Instant;
 import java.util.UUID;
 
 @RestController
@@ -35,8 +36,16 @@ public class PasteController {
             @RequestParam(required = false, defaultValue = "0") @Min(0) int page,
             @RequestParam(required = false, defaultValue = "10") @Min(0) int size,
             @AllowedValues(propName = "orderBy", values = { "createdAt", "expireDate" }) @RequestParam(required = false, defaultValue = "createdAt") String orderBy,
-            @AllowedValues(propName = "orderDirection", values = { "asc", "desc" }) @RequestParam(required = false, defaultValue = "desc") String orderDirection) {
-        Page<Paste> pagePastes = pasteService.getPublic(page, size, orderBy, orderDirection);
+            @AllowedValues(propName = "orderDirection", values = { "asc", "desc" }) @RequestParam(required = false, defaultValue = "desc") String orderDirection,
+            @RequestParam(required = false, defaultValue = "1970-01-01T00:00:00.00Z") String minStartDate,
+            @RequestParam(required = false, defaultValue = "9999-12-31T00:00:00.00Z") String maxStartDate) {
+        Page<Paste> pagePastes = pasteService.getPublic(
+                page,
+                size,
+                orderBy,
+                orderDirection,
+                Instant.parse(minStartDate),
+                Instant.parse(maxStartDate));
         PagePastesResponseDTO pagePastesResponseDTO = pagePastesMapper.toPagePastesResponseDTO(pagePastes);
         return new ResponseEntity<>(pagePastesResponseDTO, HttpStatus.OK);
     }
