@@ -1,5 +1,6 @@
 package com.example.pastestorage.rest.advice;
 
+import com.example.pastestorage.exceptions.PasteNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -27,20 +28,26 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler
     @ResponseBody
     public ResponseEntity<ErrorInfo> handle(Exception exception) {
-        List<String> messages = Collections.singletonList(exception.getClass().getName() + ": " + exception.getLocalizedMessage());
-        ErrorInfo errorInfo = new ErrorInfo(messages);
+        ErrorInfo errorInfo = getSingleMessageErrorInfo(exception);
         return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler
     @ResponseBody
+    public ResponseEntity<ErrorInfo> handle(PasteNotFoundException exception) {
+        ErrorInfo errorInfo = getSingleMessageErrorInfo(exception);
+        return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    @ResponseBody
     public ResponseEntity<ErrorInfo> handle(MethodArgumentNotValidException exception) {
-        exception.getBindingResult().getFieldErrors().stream().map(FieldError::getField).forEach(System.out::println);
         List<String> messages = exception.getBindingResult().getFieldErrors()
                 .stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.toList());
-        ErrorInfo errorInfo = new ErrorInfo(messages);
+        Map<String, List<String>> exceptions = Collections.singletonMap(exception.getClass().getName(), messages);
+        ErrorInfo errorInfo = new ErrorInfo(exceptions);
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
 
@@ -51,16 +58,22 @@ public class ExceptionControllerAdvice {
                 .stream()
                 .map(e -> e.getPropertyPath() + ": " + e.getMessage())
                 .collect(Collectors.toList());
-        ErrorInfo errorInfo = new ErrorInfo(messages);
+        Map<String, List<String>> exceptions = Collections.singletonMap(exception.getClass().getName(), messages);
+        ErrorInfo errorInfo = new ErrorInfo(exceptions);
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
+
+    private ErrorInfo getSingleMessageErrorInfo(Exception exception) {
+        List<String> messages = Collections.singletonList(exception.getLocalizedMessage());
+        Map<String, List<String>> exceptions = Collections.singletonMap(exception.getClass().getName(), messages);
+        ErrorInfo errorInfo = new ErrorInfo(exceptions);
+        return errorInfo;
     }
 
     @Getter
     @RequiredArgsConstructor
     private class ErrorInfo {
-        private final List<String> messages;
+        private final Map<String, List<String>> exceptions;
 
     }
-
-
 }

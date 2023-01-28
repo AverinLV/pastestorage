@@ -28,9 +28,9 @@ public class PasteService {
         pasteRepository.save(paste);
     }
     @Transactional(readOnly = true)
-    public Paste get(UUID id) {
+    public Optional<Paste> get(UUID id) {
         Optional<Paste> foundPaste = pasteRepository.findByIdAndExpireDateGreaterThan(id, Instant.now());
-        return foundPaste.orElse(null);
+        return foundPaste;
     }
 
     @Transactional(readOnly = true)

@@ -5,6 +5,7 @@ import com.example.pastestorage.dto.mapper.PasteMapper;
 import com.example.pastestorage.dto.request.PasteRequestDTO;
 import com.example.pastestorage.dto.response.PagePastesResponseDTO;
 import com.example.pastestorage.dto.response.PasteResponseDTO;
+import com.example.pastestorage.exceptions.PasteNotFoundException;
 import com.example.pastestorage.models.Paste;
 import com.example.pastestorage.services.PasteService;
 import com.example.pastestorage.validators.AllowedValues;
@@ -43,7 +44,7 @@ public class PasteController {
     @GetMapping("/{id}")
     public ResponseEntity<PasteResponseDTO> getPaste(@PathVariable("id") String id) {
         UUID uuid = UUID.fromString(id);
-        Paste foundPaste = pasteService.get(uuid);
+        Paste foundPaste = pasteService.get(uuid).orElseThrow(() -> new PasteNotFoundException("Paste with id " + id + " is not found"));
         return new ResponseEntity<>(pasteMapper.toResponseDTO(foundPaste), HttpStatus.OK);
     }
     @PostMapping()
