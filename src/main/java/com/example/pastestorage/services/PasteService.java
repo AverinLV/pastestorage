@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +50,12 @@ public class PasteService {
                 maxStartDate,
                 paging);
         return pagePastes;
+    }
+
+    @Transactional
+    @Scheduled(cron = "${cron.clean_database_time_expression}") // Defined in properties file. Cron format
+    public void deleteExpired() {
+        pasteRepository.deleteExpired(Instant.now());
     }
 
     private void enrichPaste(Paste paste) {
