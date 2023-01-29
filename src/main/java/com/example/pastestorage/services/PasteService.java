@@ -43,7 +43,7 @@ public class PasteService {
                                  Instant minStartDate,
                                  Instant maxStartDate) {
         Pageable paging = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(orderDirection), orderBy));
-        Page<Paste> pagePastes = pasteRepository.findPublicNotExpired(
+        Page<Paste> pagePastes = pasteRepository.findNotExpired(
                 AccessType.PUBLIC,
                 Instant.now(),
                 minStartDate,

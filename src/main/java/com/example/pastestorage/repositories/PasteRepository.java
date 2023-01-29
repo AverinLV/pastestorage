@@ -23,11 +23,11 @@ public interface PasteRepository extends JpaRepository<Paste, UUID> {
             + " AND p.expireDate >= :currentDate"
             + " AND p.createdAt >= :minCreatedDate"
             + " AND p.createdAt <= :maxCreatedDate")
-    Page<Paste> findPublicNotExpired(@Param("AccessType") AccessType accessType,
-                                     @Param("currentDate") Instant currentDate,
-                                     @Param("minCreatedDate") Instant minCreatedDate,
-                                     @Param("maxCreatedDate") Instant maxCreatedDate,
-                                     Pageable pageable);
+    Page<Paste> findNotExpired(@Param("AccessType") AccessType accessType,
+                               @Param("currentDate") Instant currentDate,
+                               @Param("minCreatedDate") Instant minCreatedDate,
+                               @Param("maxCreatedDate") Instant maxCreatedDate,
+                               Pageable pageable);
     @Modifying
     @Query("DELETE FROM Paste p WHERE p.expireDate < :currentDate")
     void deleteExpired(@Param("currentDate") Instant currentDate);
