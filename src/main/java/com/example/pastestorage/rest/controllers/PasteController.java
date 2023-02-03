@@ -2,7 +2,7 @@ package com.example.pastestorage.rest.controllers;
 
 import com.example.pastestorage.dto.mapper.PagePastesMapper;
 import com.example.pastestorage.dto.mapper.PasteMapper;
-import com.example.pastestorage.dto.request.PasteRequestDTO;
+import com.example.pastestorage.dto.request.CreatePasteDTO;
 import com.example.pastestorage.dto.response.PagePastesResponseDTO;
 import com.example.pastestorage.dto.response.PasteResponseDTO;
 import com.example.pastestorage.exceptions.PasteNotFoundException;
@@ -62,8 +62,8 @@ public class PasteController {
         return new ResponseEntity<>(pasteMapper.toResponseDTO(foundPaste), HttpStatus.OK);
     }
     @PostMapping()
-    public ResponseEntity<PasteResponseDTO> createPaste(@Valid @RequestBody PasteRequestDTO pasteRequestDTO) {
-        Paste newPaste = pasteMapper.toPaste(pasteRequestDTO);
+    public ResponseEntity<PasteResponseDTO> createPaste(@Valid @RequestBody CreatePasteDTO createPasteDTO) {
+        Paste newPaste = pasteMapper.toPaste(createPasteDTO);
         pasteService.save(newPaste);
         return new ResponseEntity<>(pasteMapper.toResponseDTO(newPaste), HttpStatus.CREATED);
     }

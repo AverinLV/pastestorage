@@ -7,11 +7,10 @@ import lombok.Setter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import java.time.temporal.ChronoUnit;
 
 @Getter
 @Setter
-public class PasteRequestDTO {
+public class CreatePasteDTO {
     @NotEmpty()
     String textData;
     @Min(1)
