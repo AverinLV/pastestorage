@@ -1,11 +1,8 @@
 package com.example.pastestorage.rest.advice;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.example.pastestorage.dto.response.ErrorDTO;
 import com.example.pastestorage.exceptions.PasteNotFoundException;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,65 +23,57 @@ import java.util.stream.Collectors;
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler
-    public ResponseEntity<ErrorInfo> handle(Exception exception) {
-        ErrorInfo errorInfo = getSingleMessageErrorInfo(exception);
+    public ResponseEntity<ErrorDTO> handle(Exception exception) {
+        ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
         exception.printStackTrace();
-        return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorInfo> handle (JWTVerificationException exception) {
-        ErrorInfo errorInfo = getSingleMessageErrorInfo(exception);
-        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorDTO> handle (JWTVerificationException exception) {
+        ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorInfo> handle (BadCredentialsException exception) {
-        ErrorInfo errorInfo = getSingleMessageErrorInfo(exception);
-        return new ResponseEntity<>(errorInfo, HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ErrorDTO> handle (BadCredentialsException exception) {
+        ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
+        return new ResponseEntity<>(errorDTO, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorInfo> handle(PasteNotFoundException exception) {
-        ErrorInfo errorInfo = getSingleMessageErrorInfo(exception);
-        return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorDTO> handle(PasteNotFoundException exception) {
+        ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
+        return new ResponseEntity<>(errorDTO, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorInfo> handle(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ErrorDTO> handle(MethodArgumentNotValidException exception) {
         List<String> messages = exception.getBindingResult().getFieldErrors()
                 .stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.toList());
         Map<String, List<String>> exceptions = Collections.singletonMap(exception.getClass().getName(), messages);
-        ErrorInfo errorInfo = new ErrorInfo(exceptions);
-        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+        ErrorDTO errorDTO = new ErrorDTO(exceptions);
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
-
-
     @ExceptionHandler
-    public ResponseEntity<ErrorInfo> handle(ConstraintViolationException exception) {
+    public ResponseEntity<ErrorDTO> handle(ConstraintViolationException exception) {
         List<String> messages = exception.getConstraintViolations()
                 .stream()
                 .map(e -> e.getPropertyPath() + ": " + e.getMessage())
                 .collect(Collectors.toList());
         Map<String, List<String>> exceptions = Collections.singletonMap(exception.getClass().getName(), messages);
-        ErrorInfo errorInfo = new ErrorInfo(exceptions);
-        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+        ErrorDTO errorDTO = new ErrorDTO(exceptions);
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
-    private ErrorInfo getSingleMessageErrorInfo(Exception exception) {
+    private ErrorDTO getSingleMessageErrorDTO(Exception exception) {
         List<String> messages = Collections.singletonList(exception.getLocalizedMessage());
         Map<String, List<String>> exceptions = Collections.singletonMap(exception.getClass().getName(), messages);
-        ErrorInfo errorInfo = new ErrorInfo(exceptions);
-        return errorInfo;
+        ErrorDTO errorDTO = new ErrorDTO(exceptions);
+        return errorDTO;
     }
-
-    @Getter
-    @RequiredArgsConstructor
-    private class ErrorInfo {
-        private final Map<String, List<String>> exceptions;
-
-    }
+    
 }
