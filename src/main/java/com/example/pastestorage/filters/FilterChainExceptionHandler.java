@@ -1,5 +1,6 @@
 package com.example.pastestorage.filters;
 
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.Ordered;
@@ -16,8 +17,7 @@ import java.io.IOException;
 
 @Component
 public class FilterChainExceptionHandler extends OncePerRequestFilter {
-    @Autowired
-    @Qualifier("handlerExceptionResolver")
+    @Setter(onParam_={@Autowired, @Qualifier("handlerExceptionResolver")})
     private HandlerExceptionResolver resolver;
 
     @Override

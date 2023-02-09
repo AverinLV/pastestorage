@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,6 +36,12 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<ErrorInfo> handle (JWTVerificationException exception) {
         ErrorInfo errorInfo = getSingleMessageErrorInfo(exception);
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorInfo> handle (BadCredentialsException exception) {
+        ErrorInfo errorInfo = getSingleMessageErrorInfo(exception);
+        return new ResponseEntity<>(errorInfo, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler
