@@ -60,6 +60,6 @@ public class PasteService {
 
     private void enrichPaste(Paste paste) {
         paste.setCreatedAt(Instant.now());
-    }
+    } // TODO: move this logic to Mapper
 
 }

@@ -1,5 +1,6 @@
 package com.example.pastestorage.rest.advice;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.pastestorage.exceptions.PasteNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -22,25 +20,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+@RestControllerAdvice
 @Component
 public class ExceptionControllerAdvice {
+
     @ExceptionHandler
-    @ResponseBody
     public ResponseEntity<ErrorInfo> handle(Exception exception) {
         ErrorInfo errorInfo = getSingleMessageErrorInfo(exception);
+        exception.printStackTrace();
         return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler
-    @ResponseBody
+    public ResponseEntity<ErrorInfo> handle (JWTVerificationException exception) {
+        ErrorInfo errorInfo = getSingleMessageErrorInfo(exception);
+        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<ErrorInfo> handle(PasteNotFoundException exception) {
         ErrorInfo errorInfo = getSingleMessageErrorInfo(exception);
         return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    @ResponseBody
     public ResponseEntity<ErrorInfo> handle(MethodArgumentNotValidException exception) {
         List<String> messages = exception.getBindingResult().getFieldErrors()
                 .stream()
@@ -51,8 +54,9 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
 
+
+
     @ExceptionHandler
-    @ResponseBody
     public ResponseEntity<ErrorInfo> handle(ConstraintViolationException exception) {
         List<String> messages = exception.getConstraintViolations()
                 .stream()
