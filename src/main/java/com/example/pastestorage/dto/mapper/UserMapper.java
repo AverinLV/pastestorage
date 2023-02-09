@@ -31,7 +31,7 @@ public abstract class UserMapper {
         return token;
     }
     @BeforeMapping
-    protected void enrichUserWithRole(CreateUserDTO createUserDTO, @MappingTarget User user) {
+    protected void enrichUserWithRole(@MappingTarget User user) {
         user.setUserRole(UserRole.ROLE_BASIC);
     }
 

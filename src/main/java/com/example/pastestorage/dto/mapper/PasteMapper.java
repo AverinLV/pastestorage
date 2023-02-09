@@ -30,7 +30,7 @@ public abstract class PasteMapper {
     }
 
     @BeforeMapping
-    protected void enrichPaste(CreatePasteDTO createPasteDTO, @MappingTarget Paste paste) {
+    protected void enrichPaste(@MappingTarget Paste paste) {
         paste.setCreatedAt(Instant.now());
     }
 
