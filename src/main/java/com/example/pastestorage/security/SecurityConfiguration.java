@@ -31,8 +31,6 @@ public class SecurityConfiguration {
     private final FilterChainExceptionHandler filterChainExceptionHandler;
     private final UserDetailsServiceImpl userDetailsService;
 
-    //private final PasswordEncoder passwordEncoder;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

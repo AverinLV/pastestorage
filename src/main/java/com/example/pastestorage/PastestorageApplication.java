@@ -14,9 +14,4 @@ public class PastestorageApplication {
 		SpringApplication.run(PastestorageApplication.class, args);
 	}
 
-//	@Bean
-//	public PasswordEncoder getPasswordEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
-
 }
