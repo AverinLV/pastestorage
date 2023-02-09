@@ -23,7 +23,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/pastes")
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PasteController {
@@ -31,7 +31,7 @@ public class PasteController {
     private final PasteMapper pasteMapper;
     private final PagePastesMapper pagePastesMapper;
 
-    @GetMapping("/pastes")
+    @GetMapping()
     public ResponseEntity<PagePastesResponseDTO> getPublicPastes(
             @RequestParam(required = false, defaultValue = "0") @Min(0) int page,
             @RequestParam(required = false, defaultValue = "10") @Min(0) int size,
@@ -48,11 +48,6 @@ public class PasteController {
                 Instant.parse(maxStartDate));
         PagePastesResponseDTO pagePastesResponseDTO = pagePastesMapper.toPagePastesResponseDTO(pagePastes);
         return new ResponseEntity<>(pagePastesResponseDTO, HttpStatus.OK);
-    }
-
-    @GetMapping("/ping")
-    public ResponseEntity<Void> ping() {
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
