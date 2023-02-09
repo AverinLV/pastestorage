@@ -26,7 +26,7 @@ public abstract class UserMapper {
     @Mapping(source = "username", target = "token", qualifiedByName = "toToken")
     public abstract UserSignedUpResponseDTO toUserSignedUpResponseDTO(User user);
     @Named("toToken")
-    public String usernameToToken(String username) {
+    protected String usernameToToken(String username) {
         String token = jwtUtil.generateToken(username);
         return token;
     }

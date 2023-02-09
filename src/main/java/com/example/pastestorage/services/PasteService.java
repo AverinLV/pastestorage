@@ -26,7 +26,6 @@ public class PasteService {
 
     @Transactional
     public void save(Paste paste) {
-        enrichPaste(paste);
         pasteRepository.save(paste);
     }
     @Transactional(readOnly = true)
@@ -57,9 +56,5 @@ public class PasteService {
     public void deleteExpired() {
         pasteRepository.deleteExpired(Instant.now());
     }
-
-    private void enrichPaste(Paste paste) {
-        paste.setCreatedAt(Instant.now());
-    } // TODO: move this logic to Mapper
 
 }
