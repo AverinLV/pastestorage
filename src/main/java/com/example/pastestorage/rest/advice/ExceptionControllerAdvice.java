@@ -3,11 +3,13 @@ package com.example.pastestorage.rest.advice;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.pastestorage.dto.response.ErrorDTO;
 import com.example.pastestorage.exceptions.PasteNotFoundException;
+import com.example.pastestorage.exceptions.UnauthorizedActionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,26 +33,26 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorDTO> handle (AccessDeniedException exception) {
+    @ExceptionHandler({UnauthorizedActionException.class, AccessDeniedException.class})
+    public ResponseEntity<ErrorDTO> forbiddenError(Exception exception) {
         ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
         return new ResponseEntity<>(errorDTO, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorDTO> handle (JWTVerificationException exception) {
+    @ExceptionHandler({JWTVerificationException.class})
+    public ResponseEntity<ErrorDTO> handleBadRequestOthers(Exception exception) {
         ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorDTO> handle (BadCredentialsException exception) {
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<ErrorDTO> handleUnauthorized(Exception exception) {
         ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
         return new ResponseEntity<>(errorDTO, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorDTO> handle(PasteNotFoundException exception) {
+    @ExceptionHandler({PasteNotFoundException.class, UsernameNotFoundException.class})
+    public ResponseEntity<ErrorDTO> handleNotFound(Exception exception) {
         ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
         return new ResponseEntity<>(errorDTO, HttpStatus.NOT_FOUND);
     }
@@ -83,5 +85,5 @@ public class ExceptionControllerAdvice {
         ErrorDTO errorDTO = new ErrorDTO(exceptions);
         return errorDTO;
     }
-    
+
 }

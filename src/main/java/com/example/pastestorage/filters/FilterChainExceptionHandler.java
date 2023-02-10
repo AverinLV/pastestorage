@@ -17,7 +17,7 @@ import java.io.IOException;
 
 @Component
 public class FilterChainExceptionHandler extends OncePerRequestFilter {
-    @Setter(onParam_={@Autowired, @Qualifier("handlerExceptionResolver")})
+    @Setter(onMethod_={@Autowired} ,onParam_={@Qualifier("handlerExceptionResolver")})
     private HandlerExceptionResolver resolver;
 
     @Override
@@ -25,6 +25,7 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
+            e.printStackTrace();
             resolver.resolveException(request, response, null, e);
         }
     }
