@@ -1,5 +1,6 @@
 package com.example.pastestorage.services;
 
+import com.example.pastestorage.exceptions.PasteNotFoundException;
 import com.example.pastestorage.models.Paste;
 import com.example.pastestorage.repositories.PasteRepository;
 import com.example.pastestorage.types.AccessType;
@@ -29,8 +30,10 @@ public class PasteService {
         pasteRepository.save(paste);
     }
     @Transactional(readOnly = true)
-    public Optional<Paste> get(UUID id) {
-        Optional<Paste> foundPaste = pasteRepository.findByIdAndExpireDateGreaterThan(id, Instant.now());
+    public Paste get(UUID id) {
+        Paste foundPaste = pasteRepository
+                .findByIdAndExpireDateGreaterThan(id, Instant.now())
+                .orElseThrow(() -> new PasteNotFoundException("Paste with id " + id + " is not found"));
         return foundPaste;
     }
 

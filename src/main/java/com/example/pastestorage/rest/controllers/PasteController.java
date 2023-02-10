@@ -53,7 +53,7 @@ public class PasteController {
     @GetMapping("/{id}")
     public ResponseEntity<PasteResponseDTO> getPaste(@PathVariable("id") String id) {
         UUID uuid = UUID.fromString(id);
-        Paste foundPaste = pasteService.get(uuid).orElseThrow(() -> new PasteNotFoundException("Paste with id " + id + " is not found"));
+        Paste foundPaste = pasteService.get(uuid);
         return new ResponseEntity<>(pasteMapper.toResponseDTO(foundPaste), HttpStatus.OK);
     }
     @PostMapping()

@@ -5,6 +5,8 @@ import com.example.pastestorage.dto.response.ErrorDTO;
 import com.example.pastestorage.exceptions.PasteNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
@@ -27,6 +29,12 @@ public class ExceptionControllerAdvice {
         ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
         exception.printStackTrace();
         return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorDTO> handle (AccessDeniedException exception) {
+        ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
+        return new ResponseEntity<>(errorDTO, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler
