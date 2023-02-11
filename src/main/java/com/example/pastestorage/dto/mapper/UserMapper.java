@@ -5,12 +5,14 @@ import com.example.pastestorage.dto.response.UserAuthenticatedResponseDTO;
 import com.example.pastestorage.models.User;
 import com.example.pastestorage.security.JWTUtil;
 import com.example.pastestorage.types.UserRole;
+import lombok.Setter;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
-    @Autowired
+    @Setter(onMethod_={@Autowired})
     private JWTUtil jwtUtil;
 
     public abstract UserAuthenticatedResponseDTO toUserSignedUpResponseDTO(String username, String token);

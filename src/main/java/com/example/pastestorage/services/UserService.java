@@ -45,4 +45,11 @@ public class UserService {
         userToBeChanged.setUserRole(role);
         userRepository.save(userToBeChanged);
     }
+
+    @Transactional(readOnly = true)
+    public User get(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return user;
+    }
 }

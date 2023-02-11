@@ -30,4 +30,7 @@ public class Paste {
     @Enumerated(EnumType.STRING)
     AccessType accessType;
 
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
 }

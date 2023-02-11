@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "service_user")
@@ -23,4 +24,6 @@ public class User {
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     UserRole userRole;
+    @OneToMany(mappedBy = "createdBy")
+    private List<Paste> pastes;
 }
