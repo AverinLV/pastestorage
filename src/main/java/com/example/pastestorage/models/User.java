@@ -14,9 +14,10 @@ import java.util.List;
 @Table(name = "service_user")
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class User {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    long id;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
     String username;
     String password;
     @Column(name = "birth_date")

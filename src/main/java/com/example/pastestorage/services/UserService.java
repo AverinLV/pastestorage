@@ -8,6 +8,7 @@ import com.example.pastestorage.types.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,6 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserService {
     private final UserRepository userRepository;
-    private final AuthorityUtil authorityUtil;
     @Transactional(readOnly = true)
     public boolean isUsernameExist(String username) {
         Optional<User> user = userRepository.findByUsername(username);
@@ -27,20 +27,18 @@ public class UserService {
 
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SUPER_ADMIN')")
-    public void setRole(long id, UserRole role) {
-        User userToBeChanged = userRepository
-                .findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("Unable to find user with ID " + id));
-        int roleToBeSetPriority = authorityUtil.getRolePriority(role);
-        int originalRolePriority = authorityUtil.getRolePriority(userToBeChanged.getUserRole());
-        int requesterRolePriority = authorityUtil.getRolePriority(authorityUtil.getRoleFromContext());
+    public void setRole(String username, UserRole role) {
+        User userToBeChanged = this.get(username);
+        int roleToBeSetPriority = AuthorityUtil.getRolePriority(role);
+        int originalRolePriority = AuthorityUtil.getRolePriority(userToBeChanged.getUserRole());
+        int requesterRolePriority = AuthorityUtil.getRolePriority(AuthorityUtil.getRoleFromContext());
         if (roleToBeSetPriority > requesterRolePriority) {
             throw new UnauthorizedActionException("Unable to grant role higher than requester role. Requester role: "
-                    + authorityUtil.getRoleFromContext() + ". Requested role: " + role);
+                    + AuthorityUtil.getRoleFromContext() + ". Requested role: " + role);
         }
         if (originalRolePriority == requesterRolePriority) {
             throw new UnauthorizedActionException("Unable to change roles with same priority as requester. Requester role: "
-                    + authorityUtil.getRoleFromContext() + ". Requested role: " + role);
+                    + AuthorityUtil.getRoleFromContext() + ". Requested role: " + role);
         }
         userToBeChanged.setUserRole(role);
         userRepository.save(userToBeChanged);
@@ -48,8 +46,14 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User get(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return user;
+        UserRole requesterRole = AuthorityUtil.getRoleFromContext();
+        String requesterUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (username.equals(requesterUsername) || AuthorityUtil.getRolePriority(requesterRole) >= AuthorityUtil.getRolePriority(UserRole.ROLE_ADMIN)) {
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            return user;
+        } else {
+            throw new UnauthorizedActionException("Only " + UserRole.ROLE_ADMIN + " or higher can access other user's info");
+        }
     }
 }

@@ -9,7 +9,7 @@ import java.util.Collection;
 
 @Component
 public class AuthorityUtil {
-    public UserRole getRoleFromContext() {
+    public static UserRole getRoleFromContext() {
         Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -21,7 +21,7 @@ public class AuthorityUtil {
         return userRole;
     }
 
-    public int getRolePriority(UserRole role) {
+    public static int getRolePriority(UserRole role) {
         return UserRole.valueOf(role.name()).ordinal();
     }
 }
