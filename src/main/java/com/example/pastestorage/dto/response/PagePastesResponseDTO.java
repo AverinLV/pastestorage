@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class PagePastesResponseDTO {
-    List<Paste> pastes;
+    List<PasteResponseDTO> pastes;
     int currentPage;
     int totalItems;
     int totalPages;

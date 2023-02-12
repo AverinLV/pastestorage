@@ -13,14 +13,9 @@ import java.util.List;
         componentModel = "spring",
         uses = {PasteMapper.class})
 public interface PagePastesMapper {
-    @Mapping(target = "pastes", source = ".", qualifiedByName = "toPastes")
+    @Mapping(target = "pastes", source = "content")
     @Mapping(target = "currentPage", source = "number")
     @Mapping(target = "totalItems", source = "totalElements")
     PagePastesResponseDTO toPagePastesResponseDTO(Page<Paste> pastePage);
 
-    @Named("toPastes")
-    default List<Paste> convertToPastes(Page<Paste> pastePage) {
-        List<Paste> pasteList = pastePage.getContent();
-        return pasteList;
-    }
 }
