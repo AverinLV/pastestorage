@@ -1,5 +1,6 @@
 package com.example.pastestorage.security;
 
+import com.example.pastestorage.models.Paste;
 import com.example.pastestorage.types.UserRole;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,5 +24,15 @@ public class AuthorityUtil {
 
     public static int getRolePriority(UserRole role) {
         return UserRole.valueOf(role.name()).ordinal();
+    }
+
+    public static boolean isAllowedAction(String entityUsername) {
+        UserRole requesterRole = AuthorityUtil.getRoleFromContext();
+        String requesterUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (entityUsername.equals(requesterUsername) || AuthorityUtil.getRolePriority(requesterRole) >= AuthorityUtil.getRolePriority(UserRole.ROLE_ADMIN)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

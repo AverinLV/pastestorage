@@ -51,11 +51,8 @@ public class PasteService {
 
     @Transactional
     public Paste delete(UUID id) {
-        UserRole requesterRole = AuthorityUtil.getRoleFromContext();
-        String requesterUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         Paste paste = get(id);
-        if (paste.getCreatedBy().getUsername().equals(requesterUsername)
-                || AuthorityUtil.getRolePriority(requesterRole) >= AuthorityUtil.getRolePriority(UserRole.ROLE_ADMIN)) {
+        if (AuthorityUtil.isAllowedAction(paste.getCreatedBy().getUsername())) {
             pasteRepository.delete(paste);
         } else {
             throw new UnauthorizedActionException("Only " + UserRole.ROLE_ADMIN + " or higher can delete other user's pastes");
@@ -65,11 +62,8 @@ public class PasteService {
 
     @Transactional
     public Paste edit(UUID id, EditPasteDTO editPasteDTO) {
-        UserRole requesterRole = AuthorityUtil.getRoleFromContext();
-        String requesterUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         Paste paste = get(id);
-        if (paste.getCreatedBy().getUsername().equals(requesterUsername)
-                || AuthorityUtil.getRolePriority(requesterRole) >= AuthorityUtil.getRolePriority(UserRole.ROLE_ADMIN)) {
+        if (AuthorityUtil.isAllowedAction(paste.getCreatedBy().getUsername())) {
             paste.setTextData(editPasteDTO.getTextData());
             pasteRepository.save(paste);
         } else {

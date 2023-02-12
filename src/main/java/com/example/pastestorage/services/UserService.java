@@ -56,9 +56,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User get(String username) {
-        UserRole requesterRole = AuthorityUtil.getRoleFromContext();
-        String requesterUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (username.equals(requesterUsername) || AuthorityUtil.getRolePriority(requesterRole) >= AuthorityUtil.getRolePriority(UserRole.ROLE_ADMIN)) {
+        if (AuthorityUtil.isAllowedAction(username)) {
             sessionUtil.enableExpiredFilter();
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
