@@ -1,5 +1,6 @@
 package com.example.pastestorage.services;
 
+import com.example.pastestorage.dto.request.EditPasteDTO;
 import com.example.pastestorage.exceptions.PasteNotFoundException;
 import com.example.pastestorage.exceptions.UnauthorizedActionException;
 import com.example.pastestorage.models.Paste;
@@ -53,11 +54,26 @@ public class PasteService {
         UserRole requesterRole = AuthorityUtil.getRoleFromContext();
         String requesterUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         Paste paste = get(id);
-        if (paste.getCreatedBy().getUsername() == requesterUsername
+        if (paste.getCreatedBy().getUsername().equals(requesterUsername)
                 || AuthorityUtil.getRolePriority(requesterRole) >= AuthorityUtil.getRolePriority(UserRole.ROLE_ADMIN)) {
             pasteRepository.delete(paste);
         } else {
             throw new UnauthorizedActionException("Only " + UserRole.ROLE_ADMIN + " or higher can delete other user's pastes");
+        }
+        return paste;
+    }
+
+    @Transactional
+    public Paste edit(UUID id, EditPasteDTO editPasteDTO) {
+        UserRole requesterRole = AuthorityUtil.getRoleFromContext();
+        String requesterUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        Paste paste = get(id);
+        if (paste.getCreatedBy().getUsername().equals(requesterUsername)
+                || AuthorityUtil.getRolePriority(requesterRole) >= AuthorityUtil.getRolePriority(UserRole.ROLE_ADMIN)) {
+            paste.setTextData(editPasteDTO.getTextData());
+            pasteRepository.save(paste);
+        } else {
+            throw new UnauthorizedActionException("Only " + UserRole.ROLE_ADMIN + " or higher can edit other user's pastes");
         }
         return paste;
     }

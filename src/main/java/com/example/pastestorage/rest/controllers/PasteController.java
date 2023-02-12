@@ -3,6 +3,7 @@ package com.example.pastestorage.rest.controllers;
 import com.example.pastestorage.dto.mapper.PagePastesMapper;
 import com.example.pastestorage.dto.mapper.PasteMapper;
 import com.example.pastestorage.dto.request.CreatePasteDTO;
+import com.example.pastestorage.dto.request.EditPasteDTO;
 import com.example.pastestorage.dto.response.PagePastesResponseDTO;
 import com.example.pastestorage.dto.response.PasteResponseDTO;
 import com.example.pastestorage.exceptions.PasteNotFoundException;
@@ -70,4 +71,12 @@ public class PasteController {
         return new ResponseEntity<>(pasteMapper.toResponseDTO(deletedPaste), HttpStatus.OK);
     }
 
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<PasteResponseDTO> editPaste(@PathVariable("id") String id,
+                                                      @RequestBody EditPasteDTO editPasteDTO) {
+        UUID uuid = UUID.fromString(id);
+        Paste editedPaste = pasteService.edit(uuid, editPasteDTO);
+        return new ResponseEntity<>(pasteMapper.toResponseDTO(editedPaste), HttpStatus.OK);
+    }
 }
