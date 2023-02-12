@@ -63,4 +63,11 @@ public class PasteController {
         return new ResponseEntity<>(pasteMapper.toResponseDTO(newPaste), HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<PasteResponseDTO> deletePaste(@PathVariable("id") String id) {
+        UUID uuid = UUID.fromString(id);
+        Paste deletedPaste = pasteService.delete(uuid);
+        return new ResponseEntity<>(pasteMapper.toResponseDTO(deletedPaste), HttpStatus.OK);
+    }
+
 }
