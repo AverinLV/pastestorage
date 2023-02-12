@@ -2,6 +2,7 @@ package com.example.pastestorage.models;
 
 import com.example.pastestorage.types.AccessType;
 import lombok.*;
+import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Type;
@@ -17,6 +18,7 @@ import java.util.UUID;
         name = "expiredFilter",
         parameters = @ParamDef(name = "currentTime", type = "Instant")
 )
+@Filter(name = "expiredFilter", condition = "expire_date > :currentTime")
 public class Paste {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

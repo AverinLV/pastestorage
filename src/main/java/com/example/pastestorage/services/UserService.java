@@ -5,6 +5,7 @@ import com.example.pastestorage.models.User;
 import com.example.pastestorage.repositories.UserRepository;
 import com.example.pastestorage.security.AuthorityUtil;
 import com.example.pastestorage.types.UserRole;
+import com.example.pastestorage.util.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Filter;
 import org.hibernate.Session;
@@ -27,7 +28,7 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserService {
     private final UserRepository userRepository;
-    private final EntityManager entityManager;
+    private final SessionUtil sessionUtil;
     @Transactional(readOnly = true)
     public boolean isUsernameExist(String username) {
         Optional<User> user = userRepository.findByUsername(username);
@@ -58,9 +59,10 @@ public class UserService {
         UserRole requesterRole = AuthorityUtil.getRoleFromContext();
         String requesterUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         if (username.equals(requesterUsername) || AuthorityUtil.getRolePriority(requesterRole) >= AuthorityUtil.getRolePriority(UserRole.ROLE_ADMIN)) {
-            enableExpiredFilter();
+            sessionUtil.enableExpiredFilter();
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            sessionUtil.disableFilter("expiredFilter");
             return user;
         } else {
             throw new UnauthorizedActionException("Only " + UserRole.ROLE_ADMIN + " or higher can access other user's info");
@@ -72,15 +74,10 @@ public class UserService {
     public Page<User> getAll(int page,
                              int size) {
         Pageable paging = PageRequest.of(page, size);
-        enableExpiredFilter();
+        sessionUtil.enableExpiredFilter();
         Page<User> pageUsers = userRepository.findAll(paging);
+        sessionUtil.disableFilter("expiredFilter");
         return pageUsers;
     }
 
-    private void enableExpiredFilter() {
-        // We need to manually activate filter and set variable
-        Session session = entityManager.unwrap(Session.class);
-        Filter filter = session.enableFilter("expiredFilter");
-        filter.setParameter("currentTime", Instant.now());
-    }
 }

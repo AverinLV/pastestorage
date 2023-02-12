@@ -18,13 +18,13 @@ import java.util.UUID;
 
 @Repository
 public interface PasteRepository extends JpaRepository<Paste, UUID> {
-    Optional<Paste> findByIdAndExpireDateGreaterThan(UUID id, Instant expireDate);
+    @Query("SELECT p FROM Paste p WHERE p.id = :id")
+    Optional<Paste> findById(@Param("id") UUID id);
+
     @Query("SELECT p FROM Paste p WHERE p.accessType = :AccessType"
-            + " AND p.expireDate >= :currentDate"
             + " AND p.createdAt >= :minCreatedDate"
             + " AND p.createdAt <= :maxCreatedDate")
     Page<Paste> findNotExpired(@Param("AccessType") AccessType accessType,
-                               @Param("currentDate") Instant currentDate,
                                @Param("minCreatedDate") Instant minCreatedDate,
                                @Param("maxCreatedDate") Instant maxCreatedDate,
                                Pageable pageable);
