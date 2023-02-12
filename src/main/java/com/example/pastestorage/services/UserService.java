@@ -6,6 +6,8 @@ import com.example.pastestorage.repositories.UserRepository;
 import com.example.pastestorage.security.AuthorityUtil;
 import com.example.pastestorage.types.UserRole;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,12 +19,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserService {
     private final UserRepository userRepository;
+    private final EntityManager entityManager;
     @Transactional(readOnly = true)
     public boolean isUsernameExist(String username) {
         Optional<User> user = userRepository.findByUsername(username);
@@ -53,6 +58,7 @@ public class UserService {
         UserRole requesterRole = AuthorityUtil.getRoleFromContext();
         String requesterUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         if (username.equals(requesterUsername) || AuthorityUtil.getRolePriority(requesterRole) >= AuthorityUtil.getRolePriority(UserRole.ROLE_ADMIN)) {
+            enableExpiredFilter();
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             return user;
@@ -66,7 +72,15 @@ public class UserService {
     public Page<User> getAll(int page,
                              int size) {
         Pageable paging = PageRequest.of(page, size);
+        enableExpiredFilter();
         Page<User> pageUsers = userRepository.findAll(paging);
         return pageUsers;
+    }
+
+    private void enableExpiredFilter() {
+        // We need to manually activate filter and set variable
+        Session session = entityManager.unwrap(Session.class);
+        Filter filter = session.enableFilter("expiredFilter");
+        filter.setParameter("currentTime", Instant.now());
     }
 }

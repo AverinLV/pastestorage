@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Filter;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -26,5 +27,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     UserRole userRole;
     @OneToMany(mappedBy = "createdBy")
+    @Filter(name = "expiredFilter", condition = "expire_date > :currentTime")
     private List<Paste> pastes;
 }
