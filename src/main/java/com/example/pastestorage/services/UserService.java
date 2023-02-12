@@ -7,6 +7,10 @@ import com.example.pastestorage.security.AuthorityUtil;
 import com.example.pastestorage.types.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -55,5 +59,14 @@ public class UserService {
         } else {
             throw new UnauthorizedActionException("Only " + UserRole.ROLE_ADMIN + " or higher can access other user's info");
         }
+    }
+
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SUPER_ADMIN')")
+    public Page<User> getAll(int page,
+                             int size) {
+        Pageable paging = PageRequest.of(page, size);
+        Page<User> pageUsers = userRepository.findAll(paging);
+        return pageUsers;
     }
 }
