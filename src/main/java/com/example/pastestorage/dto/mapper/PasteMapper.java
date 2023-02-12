@@ -21,6 +21,8 @@ import java.util.List;
 public abstract class PasteMapper {
     @Setter(onMethod_={@Autowired})
     private UserService userService;
+
+    @Mapping(target = "createdBy", expression = "java(paste.getCreatedBy().getUsername())")
     public abstract PasteResponseDTO toResponseDTO(Paste paste);
     @Mapping(target = "expireDate", source = ".", qualifiedByName = "toExpireDate") // source = "." can make use source object by parameter.
     public abstract Paste toPaste(CreatePasteDTO createPasteDTO);
