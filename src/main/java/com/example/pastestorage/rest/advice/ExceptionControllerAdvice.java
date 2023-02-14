@@ -61,7 +61,7 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<ErrorDTO> handle(MethodArgumentNotValidException exception) {
         List<String> messages = exception.getBindingResult().getFieldErrors()
                 .stream()
-                .map(FieldError::getDefaultMessage)
+                .map(e -> e.getField() + ": " + e.getDefaultMessage())
                 .collect(Collectors.toList());
         Map<String, List<String>> exceptions = Collections.singletonMap(exception.getClass().getName(), messages);
         ErrorDTO errorDTO = new ErrorDTO(exceptions);
