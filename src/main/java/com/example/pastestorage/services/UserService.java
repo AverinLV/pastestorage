@@ -78,4 +78,12 @@ public class UserService {
         return pageUsers;
     }
 
+    @Transactional
+    public User delete(String username) {
+        // Same access rule as in /GET case
+        User userToBeDeleted = this.get(username);
+        userRepository.delete(userToBeDeleted);
+        return userToBeDeleted;
+    }
+
 }

@@ -26,7 +26,7 @@ public class User {
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     UserRole userRole;
-    @OneToMany(mappedBy = "createdBy")
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     @Filter(name = "expiredFilter", condition = "expire_date > :currentTime")
     private List<Paste> pastes;
 }

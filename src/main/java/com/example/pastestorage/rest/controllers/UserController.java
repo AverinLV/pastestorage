@@ -46,4 +46,11 @@ public class UserController {
         PageUsersResponseDTO pageUsersResponseDTO = userMapper.toPageUsersResponseDTO(pageUsers);
         return new ResponseEntity<>(pageUsersResponseDTO, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{username}")
+    public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable("username") String username) {
+        User deletedUser = userService.delete(username);
+        UserResponseDTO userResponseDTO = userMapper.toUserResponseDTO(deletedUser);
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
+    }
 }
