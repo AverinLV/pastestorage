@@ -1,6 +1,5 @@
 package com.example.pastestorage.services;
 
-import com.example.pastestorage.dto.request.EditPasteDTO;
 import com.example.pastestorage.exceptions.PasteNotFoundException;
 import com.example.pastestorage.exceptions.UnauthorizedActionException;
 import com.example.pastestorage.models.Paste;
@@ -10,22 +9,15 @@ import com.example.pastestorage.types.AccessType;
 import com.example.pastestorage.types.UserRole;
 import com.example.pastestorage.util.SessionUtil;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Filter;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -56,18 +48,6 @@ public class PasteService {
             pasteRepository.delete(paste);
         } else {
             throw new UnauthorizedActionException("Only " + UserRole.ROLE_ADMIN + " or higher can delete other user's pastes");
-        }
-        return paste;
-    }
-
-    @Transactional
-    public Paste edit(UUID id, EditPasteDTO editPasteDTO) {
-        Paste paste = get(id);
-        if (AuthorityUtil.isAllowedAction(paste.getCreatedBy().getUsername())) {
-            paste.setTextData(editPasteDTO.getTextData());
-            pasteRepository.save(paste);
-        } else {
-            throw new UnauthorizedActionException("Only " + UserRole.ROLE_ADMIN + " or higher can edit other user's pastes");
         }
         return paste;
     }

@@ -76,7 +76,9 @@ public class PasteController {
     public ResponseEntity<PasteResponseDTO> editPaste(@PathVariable("id") String id,
                                                       @RequestBody EditPasteDTO editPasteDTO) {
         UUID uuid = UUID.fromString(id);
-        Paste editedPaste = pasteService.edit(uuid, editPasteDTO);
-        return new ResponseEntity<>(pasteMapper.toResponseDTO(editedPaste), HttpStatus.OK);
+        Paste pasteToEdit = pasteService.get(uuid);
+        pasteMapper.update(editPasteDTO, pasteToEdit);
+        pasteService.save(pasteToEdit);
+        return new ResponseEntity<>(pasteMapper.toResponseDTO(pasteToEdit), HttpStatus.OK);
     }
 }
