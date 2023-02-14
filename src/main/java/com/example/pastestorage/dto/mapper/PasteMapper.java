@@ -1,20 +1,16 @@
 package com.example.pastestorage.dto.mapper;
 
 import com.example.pastestorage.dto.request.CreatePasteDTO;
-import com.example.pastestorage.dto.request.CreateUserDTO;
 import com.example.pastestorage.dto.request.EditPasteDTO;
 import com.example.pastestorage.dto.response.PagePastesResponseDTO;
 import com.example.pastestorage.dto.response.PasteResponseDTO;
 import com.example.pastestorage.models.Paste;
-import com.example.pastestorage.models.User;
 import com.example.pastestorage.services.UserService;
-import com.example.pastestorage.types.UserRole;
 import lombok.Setter;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

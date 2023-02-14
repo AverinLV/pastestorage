@@ -1,6 +1,5 @@
 package com.example.pastestorage.security;
 
-import com.example.pastestorage.models.Paste;
 import com.example.pastestorage.types.UserRole;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

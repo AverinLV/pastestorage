@@ -1,6 +1,5 @@
 package com.example.pastestorage.dto.response;
 
-import com.example.pastestorage.models.Paste;
 import lombok.Getter;
 import lombok.Setter;
 

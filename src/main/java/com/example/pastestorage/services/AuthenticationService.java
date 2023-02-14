@@ -1,14 +1,11 @@
 package com.example.pastestorage.services;
 
 import com.example.pastestorage.dto.request.UserAuthDTO;
-import com.example.pastestorage.dto.response.UserAuthenticatedResponseDTO;
 import com.example.pastestorage.models.User;
 import com.example.pastestorage.repositories.UserRepository;
 import com.example.pastestorage.security.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;

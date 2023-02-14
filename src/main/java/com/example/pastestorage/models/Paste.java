@@ -1,11 +1,13 @@
 package com.example.pastestorage.models;
 
 import com.example.pastestorage.types.AccessType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.Instant;
