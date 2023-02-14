@@ -1,6 +1,7 @@
 package com.example.pastestorage.dto.mapper;
 
 import com.example.pastestorage.dto.request.CreateUserDTO;
+import com.example.pastestorage.dto.response.PageUsersResponseDTO;
 import com.example.pastestorage.dto.response.UserAuthenticatedResponseDTO;
 import com.example.pastestorage.dto.response.UserResponseDTO;
 import com.example.pastestorage.models.Paste;
@@ -11,6 +12,7 @@ import com.example.pastestorage.types.UserRole;
 import lombok.Setter;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +28,11 @@ public abstract class UserMapper {
     @Mapping(target = "unlistedPastesIds", expression = "java(mapPastes(user.getPastes(), AccessType.UNLISTED))")
     @Mapping(target = "publicPastesIds", expression = "java(mapPastes(user.getPastes(), AccessType.PUBLIC))")
     public abstract UserResponseDTO toUserResponseDTO(User user);
+
+    @Mapping(target = "users", source = "content")
+    @Mapping(target = "currentPage", source = "number")
+    @Mapping(target = "totalItems", source = "totalElements")
+    public abstract PageUsersResponseDTO toPageUsersResponseDTO(Page<User> userPage);
 
     @Mapping(source = "username", target = "token", qualifiedByName = "toToken")
     public abstract UserAuthenticatedResponseDTO toUserSignedUpResponseDTO(User user);

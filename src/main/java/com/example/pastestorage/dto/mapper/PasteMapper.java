@@ -3,6 +3,7 @@ package com.example.pastestorage.dto.mapper;
 import com.example.pastestorage.dto.request.CreatePasteDTO;
 import com.example.pastestorage.dto.request.CreateUserDTO;
 import com.example.pastestorage.dto.request.EditPasteDTO;
+import com.example.pastestorage.dto.response.PagePastesResponseDTO;
 import com.example.pastestorage.dto.response.PasteResponseDTO;
 import com.example.pastestorage.models.Paste;
 import com.example.pastestorage.models.User;
@@ -11,6 +12,7 @@ import com.example.pastestorage.types.UserRole;
 import lombok.Setter;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +42,11 @@ public abstract class PasteMapper {
         Instant expireDate = currentTime.plus(lifetime, lifetimeType);
         return expireDate;
     }
+
+    @Mapping(target = "pastes", source = "content")
+    @Mapping(target = "currentPage", source = "number")
+    @Mapping(target = "totalItems", source = "totalElements")
+    public abstract PagePastesResponseDTO toPagePastesResponseDTO(Page<Paste> pastePage);
 
     @BeforeMapping
     protected void enrichPaste(@MappingTarget Paste paste) {

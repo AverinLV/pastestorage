@@ -1,12 +1,10 @@
 package com.example.pastestorage.rest.controllers;
 
-import com.example.pastestorage.dto.mapper.PagePastesMapper;
 import com.example.pastestorage.dto.mapper.PasteMapper;
 import com.example.pastestorage.dto.request.CreatePasteDTO;
 import com.example.pastestorage.dto.request.EditPasteDTO;
 import com.example.pastestorage.dto.response.PagePastesResponseDTO;
 import com.example.pastestorage.dto.response.PasteResponseDTO;
-import com.example.pastestorage.exceptions.PasteNotFoundException;
 import com.example.pastestorage.models.Paste;
 import com.example.pastestorage.services.PasteService;
 import com.example.pastestorage.validators.AllowedValues;
@@ -30,7 +28,6 @@ import java.util.UUID;
 public class PasteController {
     private final PasteService pasteService;
     private final PasteMapper pasteMapper;
-    private final PagePastesMapper pagePastesMapper;
 
     @GetMapping()
     public ResponseEntity<PagePastesResponseDTO> getPublicPastes(
@@ -47,7 +44,7 @@ public class PasteController {
                 orderDirection,
                 Instant.parse(minStartDate),
                 Instant.parse(maxStartDate));
-        PagePastesResponseDTO pagePastesResponseDTO = pagePastesMapper.toPagePastesResponseDTO(pagePastes);
+        PagePastesResponseDTO pagePastesResponseDTO = pasteMapper.toPagePastesResponseDTO(pagePastes);
         return new ResponseEntity<>(pagePastesResponseDTO, HttpStatus.OK);
     }
 

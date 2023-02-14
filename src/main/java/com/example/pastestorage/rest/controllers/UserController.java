@@ -1,6 +1,5 @@
 package com.example.pastestorage.rest.controllers;
 
-import com.example.pastestorage.dto.mapper.PageUsersMapper;
 import com.example.pastestorage.dto.mapper.UserMapper;
 import com.example.pastestorage.dto.request.SetUserRoleDTO;
 import com.example.pastestorage.dto.response.MessageDTO;
@@ -18,7 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -27,7 +25,6 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
-    private final PageUsersMapper pageUsersMapper;
     @PostMapping("/{username}/set_role")
     public ResponseEntity<MessageDTO> setRole(@PathVariable("username") String username, @RequestBody SetUserRoleDTO setUserRoleDTO) {
         UserRole role = setUserRoleDTO.getRole();
@@ -46,7 +43,7 @@ public class UserController {
     public ResponseEntity<PageUsersResponseDTO> getAllUsers(@RequestParam(required = false, defaultValue = "0") @Min(0) int page,
                                                              @RequestParam(required = false, defaultValue = "10") @Min(0) int size) {
         Page<User> pageUsers = userService.getAll(page, size);
-        PageUsersResponseDTO pageUsersResponseDTO = pageUsersMapper.toPageUsersResponseDTO(pageUsers);
+        PageUsersResponseDTO pageUsersResponseDTO = userMapper.toPageUsersResponseDTO(pageUsers);
         return new ResponseEntity<>(pageUsersResponseDTO, HttpStatus.OK);
     }
 }
