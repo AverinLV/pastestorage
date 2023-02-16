@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.pastestorage.dto.response.ErrorDTO;
 import com.example.pastestorage.exceptions.PasteNotFoundException;
 import com.example.pastestorage.exceptions.UnauthorizedActionException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -22,41 +23,47 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Component
+@Log4j2
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<ErrorDTO> handle(Exception exception) {
+        log.error("Caught exception without specified handler. Using default handler: ", exception);
         ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
-        exception.printStackTrace();
         return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({UnauthorizedActionException.class, AccessDeniedException.class})
     public ResponseEntity<ErrorDTO> forbiddenError(Exception exception) {
+        log.error("Caught exception : ", exception);
         ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
         return new ResponseEntity<>(errorDTO, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler({JWTVerificationException.class})
     public ResponseEntity<ErrorDTO> handleBadRequestOthers(Exception exception) {
+        log.error("Caught exception : ", exception);
         ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({BadCredentialsException.class})
     public ResponseEntity<ErrorDTO> handleUnauthorized(Exception exception) {
+        log.error("Caught exception : ", exception);
         ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
         return new ResponseEntity<>(errorDTO, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler({PasteNotFoundException.class, UsernameNotFoundException.class})
     public ResponseEntity<ErrorDTO> handleNotFound(Exception exception) {
+        log.error("Caught exception : ", exception);
         ErrorDTO errorDTO = getSingleMessageErrorDTO(exception);
         return new ResponseEntity<>(errorDTO, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorDTO> handle(MethodArgumentNotValidException exception) {
+        log.error("Caught exception : ", exception);
         List<String> messages = exception.getBindingResult().getFieldErrors()
                 .stream()
                 .map(e -> e.getField() + ": " + e.getDefaultMessage())
@@ -68,6 +75,7 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<ErrorDTO> handle(ConstraintViolationException exception) {
+        log.error("Caught exception : ", exception);
         List<String> messages = exception.getConstraintViolations()
                 .stream()
                 .map(e -> e.getPropertyPath() + ": " + e.getMessage())
@@ -78,6 +86,7 @@ public class ExceptionControllerAdvice {
     }
 
     private ErrorDTO getSingleMessageErrorDTO(Exception exception) {
+        log.error("Caught exception : ", exception);
         List<String> messages = Collections.singletonList(exception.getLocalizedMessage());
         Map<String, List<String>> exceptions = Collections.singletonMap(exception.getClass().getName(), messages);
         ErrorDTO errorDTO = new ErrorDTO(exceptions);

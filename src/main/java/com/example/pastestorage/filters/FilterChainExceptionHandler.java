@@ -1,6 +1,7 @@
 package com.example.pastestorage.filters;
 
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Log4j2
 public class FilterChainExceptionHandler extends OncePerRequestFilter {
     @Setter(onMethod_={@Autowired} ,onParam_={@Qualifier("handlerExceptionResolver")})
     private HandlerExceptionResolver resolver;
@@ -23,7 +25,7 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Catched filter exception: ", e);
             resolver.resolveException(request, response, null, e);
         }
     }
