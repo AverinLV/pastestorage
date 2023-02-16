@@ -6,6 +6,7 @@ import com.example.pastestorage.dto.request.EditPasteDTO;
 import com.example.pastestorage.dto.response.PagePastesResponseDTO;
 import com.example.pastestorage.dto.response.PasteResponseDTO;
 import com.example.pastestorage.models.Paste;
+import com.example.pastestorage.rest.aspect.LogControllerMethodCall;
 import com.example.pastestorage.services.PasteService;
 import com.example.pastestorage.validators.AllowedValues;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class PasteController {
     private final PasteMapper pasteMapper;
 
     @GetMapping()
+    @LogControllerMethodCall
     public ResponseEntity<PagePastesResponseDTO> getPublicPastes(
             @RequestParam(required = false, defaultValue = "0") @Min(0) int page,
             @RequestParam(required = false, defaultValue = "10") @Min(0) int size,
@@ -39,7 +41,6 @@ public class PasteController {
             @AllowedValues(propName = "orderDirection", values = { "asc", "desc" }) @RequestParam(required = false, defaultValue = "desc") String orderDirection,
             @RequestParam(required = false, defaultValue = "1970-01-01T00:00:00.00Z") String minStartDate,
             @RequestParam(required = false, defaultValue = "9999-12-31T00:00:00.00Z") String maxStartDate) {
-        log.info("Accessed GET /pastes endpoint");
         Page<Paste> pagePastes = pasteService.getPublic(
                 page,
                 size,
@@ -52,6 +53,7 @@ public class PasteController {
     }
 
     @GetMapping("/{id}")
+    @LogControllerMethodCall
     public ResponseEntity<PasteResponseDTO> getPaste(@PathVariable("id") String id) {
         log.info(String.format("Accessed GET pastes/%s endpoint", id));
         UUID uuid = UUID.fromString(id);
@@ -59,6 +61,7 @@ public class PasteController {
         return new ResponseEntity<>(pasteMapper.toResponseDTO(foundPaste), HttpStatus.OK);
     }
     @PostMapping()
+    @LogControllerMethodCall
     public ResponseEntity<PasteResponseDTO> createPaste(@Valid @RequestBody CreatePasteDTO createPasteDTO) {
         log.info("Accessed POST /pastes endpoint");
         Paste newPaste = pasteMapper.toPaste(createPasteDTO);
@@ -67,6 +70,7 @@ public class PasteController {
     }
 
     @DeleteMapping("/{id}")
+    @LogControllerMethodCall
     public ResponseEntity<PasteResponseDTO> deletePaste(@PathVariable("id") String id) {
         log.info(String.format("Accessed DELETE pastes/%s endpoint", id));
         UUID uuid = UUID.fromString(id);
@@ -76,6 +80,7 @@ public class PasteController {
 
 
     @PatchMapping("/{id}")
+    @LogControllerMethodCall
     public ResponseEntity<PasteResponseDTO> editPaste(@PathVariable("id") String id,
                                                       @RequestBody EditPasteDTO editPasteDTO) {
         log.info(String.format("Accessed PATCH pastes/%s endpoint", id));
