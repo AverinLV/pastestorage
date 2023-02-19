@@ -27,7 +27,6 @@ import java.util.UUID;
 @RequestMapping("/pastes")
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@Log4j2
 public class PasteController {
     private final PasteService pasteService;
     private final PasteMapper pasteMapper;
@@ -55,7 +54,6 @@ public class PasteController {
     @GetMapping("/{id}")
     @LogControllerMethodCall
     public ResponseEntity<PasteResponseDTO> getPaste(@PathVariable("id") String id) {
-        log.info(String.format("Accessed GET pastes/%s endpoint", id));
         UUID uuid = UUID.fromString(id);
         Paste foundPaste = pasteService.get(uuid);
         return new ResponseEntity<>(pasteMapper.toResponseDTO(foundPaste), HttpStatus.OK);
@@ -63,7 +61,6 @@ public class PasteController {
     @PostMapping()
     @LogControllerMethodCall
     public ResponseEntity<PasteResponseDTO> createPaste(@Valid @RequestBody CreatePasteDTO createPasteDTO) {
-        log.info("Accessed POST /pastes endpoint");
         Paste newPaste = pasteMapper.toPaste(createPasteDTO);
         pasteService.save(newPaste);
         return new ResponseEntity<>(pasteMapper.toResponseDTO(newPaste), HttpStatus.CREATED);
@@ -72,7 +69,6 @@ public class PasteController {
     @DeleteMapping("/{id}")
     @LogControllerMethodCall
     public ResponseEntity<PasteResponseDTO> deletePaste(@PathVariable("id") String id) {
-        log.info(String.format("Accessed DELETE pastes/%s endpoint", id));
         UUID uuid = UUID.fromString(id);
         Paste deletedPaste = pasteService.delete(uuid);
         return new ResponseEntity<>(pasteMapper.toResponseDTO(deletedPaste), HttpStatus.OK);
@@ -83,7 +79,6 @@ public class PasteController {
     @LogControllerMethodCall
     public ResponseEntity<PasteResponseDTO> editPaste(@PathVariable("id") String id,
                                                       @RequestBody EditPasteDTO editPasteDTO) {
-        log.info(String.format("Accessed PATCH pastes/%s endpoint", id));
         UUID uuid = UUID.fromString(id);
         Paste pasteToEdit = pasteService.get(uuid);
         pasteMapper.update(editPasteDTO, pasteToEdit);
