@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", imports = AccessType.class)
+@Mapper(componentModel = "spring",
+        imports = AccessType.class,
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class UserMapper {
     @Setter(onMethod_={@Autowired})
     private JWTUtil jwtUtil;

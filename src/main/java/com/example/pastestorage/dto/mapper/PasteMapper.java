@@ -16,7 +16,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-@Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, componentModel = "spring")
+@Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class PasteMapper {
     @Setter(onMethod_={@Autowired})
     private UserService userService;
