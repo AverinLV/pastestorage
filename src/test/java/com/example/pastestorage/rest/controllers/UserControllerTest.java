@@ -1,20 +1,16 @@
-package com.example.pastestorage.controllers;
+package com.example.pastestorage.rest.controllers;
 
 import com.example.pastestorage.dto.mapper.UserMapper;
 import com.example.pastestorage.dto.request.SetUserRoleDTO;
 import com.example.pastestorage.models.Paste;
 import com.example.pastestorage.models.User;
-import com.example.pastestorage.rest.controllers.UserController;
 import com.example.pastestorage.services.UserService;
 import com.example.pastestorage.types.AccessType;
 import com.example.pastestorage.types.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 
