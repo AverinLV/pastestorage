@@ -99,7 +99,8 @@ public class PasteControllerTest extends ControllerBaseTest{
                         PAGE,
                         SIZE,
                         ORDER_BY,
-                        ORDER_DIR
+                        ORDER_DIR,
+                        Paste.class
                 ));
         this.mockMvc.perform(get("/pastes")
                         .param("page", String.valueOf(PAGE))
@@ -153,26 +154,6 @@ public class PasteControllerTest extends ControllerBaseTest{
                 .content(asJsonString(editPasteDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.textData").value(pasteToEdit.getTextData()));
-    }
-
-    private static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Page<Paste> getPageFromList(List<Paste> pasteList,
-                                        int page,
-                                        int size,
-                                        String orderBy,
-                                        String orderDirection) {
-        Pageable paging = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(orderDirection), orderBy));
-        final int start = (int)paging.getOffset();
-        final int end = Math.min((start + paging.getPageSize()), pasteList.size());
-        final Page<Paste> pagePaste = new PageImpl<>(pasteList.subList(start, end), paging, pasteList.size());
-        return pagePaste;
     }
 
 }
