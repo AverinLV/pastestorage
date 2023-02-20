@@ -37,6 +37,8 @@ public class UserControllerTest extends ControllerBaseTest{
     private UserController userController;
     @Autowired
     private UserMapper userMapper;
+    @MockBean
+    protected UserService userService;
     private List<User> userList;
     private List<Paste> pasteList;
     @BeforeEach

@@ -44,6 +44,8 @@ public class PasteControllerTest extends ControllerBaseTest{
     private PasteMapper pasteMapper;
     @MockBean
     private PasteService pasteService;
+    @MockBean
+    protected UserService userService;
     private List<Paste> pasteList;
     private User user;
 

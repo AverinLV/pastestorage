@@ -29,8 +29,6 @@ public abstract class ControllerBaseTest {
     protected Authentication authentication;
     @MockBean
     protected SecurityContext securityContext;
-    @MockBean
-    protected UserService userService;
     @Autowired
     protected MockMvc mockMvc;
 
