@@ -37,25 +37,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
-public class PasteControllerTest {
+public class PasteControllerTest extends ControllerBaseTest{
     @Autowired
     private PasteController pasteController;
     @Autowired
     private PasteMapper pasteMapper;
     @MockBean
     private PasteService pasteService;
-    @MockBean
-    private SecurityContextHolder securityContextHolder;
-    @MockBean
-    private Authentication authentication;
-    @MockBean
-    private SecurityContext securityContext;
-    @MockBean
-    private UserService userService;
-    @Autowired
-    private MockMvc mockMvc;
     private List<Paste> pasteList;
     private User user;
 
