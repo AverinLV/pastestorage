@@ -111,9 +111,7 @@ public class PasteControllerTest {
                         PAGE,
                         SIZE,
                         ORDER_BY,
-                        ORDER_DIR,
-                        Instant.parse(MIN_START_DATE),
-                        Instant.parse(MAX_START_DATE)
+                        ORDER_DIR
                 ));
         this.mockMvc.perform(get("/pastes")
                         .param("page", String.valueOf(PAGE))
@@ -181,9 +179,7 @@ public class PasteControllerTest {
                                         int page,
                                         int size,
                                         String orderBy,
-                                        String orderDirection,
-                                        Instant minStartDate,
-                                        Instant maxStartDate) {
+                                        String orderDirection) {
         Pageable paging = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(orderDirection), orderBy));
         final int start = (int)paging.getOffset();
         final int end = Math.min((start + paging.getPageSize()), pasteList.size());
