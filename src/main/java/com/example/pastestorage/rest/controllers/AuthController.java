@@ -8,7 +8,6 @@ import com.example.pastestorage.models.User;
 import com.example.pastestorage.rest.aspect.LogControllerMethodCall;
 import com.example.pastestorage.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

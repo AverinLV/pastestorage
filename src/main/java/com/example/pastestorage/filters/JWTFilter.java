@@ -2,7 +2,6 @@ package com.example.pastestorage.filters;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.pastestorage.security.JWTUtil;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

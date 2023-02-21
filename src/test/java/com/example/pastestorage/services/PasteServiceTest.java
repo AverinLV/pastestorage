@@ -3,10 +3,8 @@ package com.example.pastestorage.services;
 import com.example.pastestorage.models.Paste;
 import com.example.pastestorage.models.User;
 import com.example.pastestorage.repositories.PasteRepository;
-import com.example.pastestorage.repositories.UserRepository;
 import com.example.pastestorage.security.AuthorityUtil;
 import com.example.pastestorage.types.AccessType;
-import com.example.pastestorage.types.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,10 +25,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 public class PasteServiceTest extends ServiceBaseTest{
     @MockBean
