@@ -134,5 +134,15 @@ public class PasteServiceTest extends ServiceBaseTest{
 
     }
 
+    @Test
+    @DisplayName("Test deleteExpired")
+    void testDeleteExpired() {
+        doNothing().when(pasteRepository).deleteExpired(any(Instant.class));
+
+        pasteService.deleteExpired();
+
+        verify(pasteRepository, times(1)).deleteExpired(any(Instant.class));
+    }
+
 
 }
