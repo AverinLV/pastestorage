@@ -14,9 +14,6 @@ public class AuthorityUtil {
                 .getContext()
                 .getAuthentication()
                 .getAuthorities();
-        if (authorities.size() != 1) {
-            throw new RuntimeException("Found more than 1 authority for user"); //TODO change exception type
-        }
         UserRole userRole = UserRole.valueOf(authorities.iterator().next().toString());
         return userRole;
     }
