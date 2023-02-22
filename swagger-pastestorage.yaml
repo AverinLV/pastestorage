@@ -1,0 +1,563 @@
+swagger: '2.0'
+info:
+  description: Sample Pastestorage server
+  version: 1.0.0
+  title: Swagger Pastestorage
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: localhost:8080
+basePath: /
+tags:
+  - name: auth-controller
+    description: Auth Controller
+  - name: health-check-controller
+    description: Health Check Controller
+  - name: paste-controller
+    description: Paste Controller
+  - name: user-controller
+    description: User Controller
+paths:
+  /auth/login:
+    post:
+      tags:
+        - auth-controller
+      summary: performLogin
+      operationId: performLoginUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: userAuthDTO
+          description: userAuthDTO
+          required: true
+          schema:
+            $ref: '#/definitions/UserAuthDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserAuthenticatedResponseDTO'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /auth/sign_up:
+    post:
+      tags:
+        - auth-controller
+      summary: performSignUp
+      operationId: performSignUpUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: createUserDTO
+          description: createUserDTO
+          required: true
+          schema:
+            $ref: '#/definitions/CreateUserDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserAuthenticatedResponseDTO'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /health_check/ping:
+    get:
+      tags:
+        - health-check-controller
+      summary: ping
+      operationId: pingUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /pastes:
+    get:
+      tags:
+        - paste-controller
+      summary: getPublicPastes
+      operationId: getPublicPastesUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: maxStartDate
+          in: query
+          description: maxStartDate
+          required: false
+          type: string
+          default: '9999-12-31T00:00:00.00Z'
+        - name: minStartDate
+          in: query
+          description: minStartDate
+          required: false
+          type: string
+          default: '1970-01-01T00:00:00.00Z'
+        - name: orderBy
+          in: query
+          description: orderBy
+          required: false
+          type: string
+          default: createdAt
+        - name: orderDirection
+          in: query
+          description: orderDirection
+          required: false
+          type: string
+          default: desc
+        - name: page
+          in: query
+          description: page
+          required: false
+          type: integer
+          default: 0
+          minimum: 0
+          exclusiveMinimum: false
+          format: int32
+        - name: size
+          in: query
+          description: size
+          required: false
+          type: integer
+          default: 10
+          minimum: 0
+          exclusiveMinimum: false
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagePastesResponseDTO'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - paste-controller
+      summary: createPaste
+      operationId: createPasteUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: createPasteDTO
+          description: createPasteDTO
+          required: true
+          schema:
+            $ref: '#/definitions/CreatePasteDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PasteResponseDTO'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /pastes/{id}:
+    get:
+      tags:
+        - paste-controller
+      summary: getPaste
+      operationId: getPasteUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PasteResponseDTO'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - paste-controller
+      summary: deletePaste
+      operationId: deletePasteUsingDELETE
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PasteResponseDTO'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    patch:
+      tags:
+        - paste-controller
+      summary: editPaste
+      operationId: editPasteUsingPATCH
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: editPasteDTO
+          description: editPasteDTO
+          required: true
+          schema:
+            $ref: '#/definitions/EditPasteDTO'
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PasteResponseDTO'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /users:
+    get:
+      tags:
+        - user-controller
+      summary: getAllUsers
+      operationId: getAllUsersUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: page
+          in: query
+          description: page
+          required: false
+          type: integer
+          default: 0
+          minimum: 0
+          exclusiveMinimum: false
+          format: int32
+        - name: size
+          in: query
+          description: size
+          required: false
+          type: integer
+          default: 10
+          minimum: 0
+          exclusiveMinimum: false
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PageUsersResponseDTO'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /users/{username}:
+    get:
+      tags:
+        - user-controller
+      summary: getUser
+      operationId: getUserUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: username
+          in: path
+          description: username
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserResponseDTO'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - user-controller
+      summary: deleteUser
+      operationId: deleteUserUsingDELETE
+      produces:
+        - '*/*'
+      parameters:
+        - name: username
+          in: path
+          description: username
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserResponseDTO'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /users/{username}/set_role:
+    post:
+      tags:
+        - user-controller
+      summary: setRole
+      operationId: setRoleUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: setUserRoleDTO
+          description: setUserRoleDTO
+          required: true
+          schema:
+            $ref: '#/definitions/SetUserRoleDTO'
+        - name: username
+          in: path
+          description: username
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/MessageDTO'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+definitions:
+  CreatePasteDTO:
+    type: object
+    properties:
+      accessType:
+        type: string
+        enum:
+          - PUBLIC
+          - UNLISTED
+      lifetime:
+        type: integer
+        format: int32
+        minimum: 1
+        exclusiveMinimum: false
+      lifetimeType:
+        type: string
+        enum:
+          - DAYS
+          - HOURS
+          - MINUTES
+          - MONTHS
+          - SECONDS
+          - WEEKS
+          - YEARS
+      textData:
+        type: string
+    title: CreatePasteDTO
+  CreateUserDTO:
+    type: object
+    properties:
+      birthDate:
+        type: string
+        format: date
+      password:
+        type: string
+      username:
+        type: string
+    title: CreateUserDTO
+  EditPasteDTO:
+    type: object
+    properties:
+      accessType:
+        type: string
+        enum:
+          - PUBLIC
+          - UNLISTED
+      lifetime:
+        type: integer
+        format: int32
+      lifetimeType:
+        type: string
+        enum:
+          - DAYS
+          - HOURS
+          - MINUTES
+          - MONTHS
+          - SECONDS
+          - WEEKS
+          - YEARS
+      textData:
+        type: string
+    title: EditPasteDTO
+  MessageDTO:
+    type: object
+    properties:
+      message:
+        type: string
+    title: MessageDTO
+  PagePastesResponseDTO:
+    type: object
+    properties:
+      currentPage:
+        type: integer
+        format: int32
+      pastes:
+        type: array
+        items:
+          $ref: '#/definitions/PasteResponseDTO'
+      totalItems:
+        type: integer
+        format: int32
+      totalPages:
+        type: integer
+        format: int32
+    title: PagePastesResponseDTO
+  PageUsersResponseDTO:
+    type: object
+    properties:
+      currentPage:
+        type: integer
+        format: int32
+      totalItems:
+        type: integer
+        format: int32
+      totalPages:
+        type: integer
+        format: int32
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/UserResponseDTO'
+    title: PageUsersResponseDTO
+  PasteResponseDTO:
+    type: object
+    properties:
+      accessType:
+        type: string
+        enum:
+          - PUBLIC
+          - UNLISTED
+      createdAt:
+        type: string
+        format: date-time
+      createdBy:
+        type: string
+      expireDate:
+        type: string
+        format: date-time
+      id:
+        type: string
+      textData:
+        type: string
+    title: PasteResponseDTO
+  SetUserRoleDTO:
+    type: object
+    properties:
+      role:
+        type: string
+        enum:
+          - ROLE_ADMIN
+          - ROLE_BASIC
+          - ROLE_SUPER_ADMIN
+    title: SetUserRoleDTO
+  UserAuthDTO:
+    type: object
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    title: UserAuthDTO
+  UserAuthenticatedResponseDTO:
+    type: object
+    properties:
+      token:
+        type: string
+      username:
+        type: string
+    title: UserAuthenticatedResponseDTO
+  UserResponseDTO:
+    type: object
+    properties:
+      birthDate:
+        type: string
+        format: date
+      publicPastesIds:
+        type: array
+        items:
+          type: string
+      unlistedPastesIds:
+        type: array
+        items:
+          type: string
+      userRole:
+        type: string
+        enum:
+          - ROLE_ADMIN
+          - ROLE_BASIC
+          - ROLE_SUPER_ADMIN
+      username:
+        type: string
+    title: UserResponseDTO
