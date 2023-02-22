@@ -29,12 +29,28 @@ public class SecurityConfiguration {
     private final FilterChainExceptionHandler filterChainExceptionHandler;
     private final UserDetailsServiceImpl userDetailsService;
 
+    private static final String[] AUTH_WHITELIST = {
+            // -- Swagger UI v2
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            // -- Swagger UI v3 (OpenAPI)
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+            // other public endpoints of your API may be appended to this array
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 // disabling csrf since we won't use form login
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers("/users", "/users/{username}/set_role").hasAnyRole("ADMIN", "SUPER_ADMIN")
                 .antMatchers("/users/{username}").authenticated()
                 .antMatchers("/auth/sign_up", "/auth/login").permitAll()
