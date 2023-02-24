@@ -2,10 +2,12 @@ package com.example.pastestorage.services;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class ServiceBaseTest {
     protected <T> Page<T> getPageFromList(
             List<T> entityList,
