@@ -5,6 +5,7 @@ import com.example.pastestorage.dto.request.CreateUserDTO;
 import com.example.pastestorage.dto.request.UserAuthDTO;
 import com.example.pastestorage.models.User;
 import com.example.pastestorage.services.AuthenticationService;
+import com.example.pastestorage.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,6 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AuthControllerTest extends ControllerBaseTest{
     @MockBean
     private AuthenticationService authenticationService;
+    @MockBean
+    private UserService userService;
     @Autowired
     private UserMapper userMapper;
 
@@ -32,6 +35,7 @@ public class AuthControllerTest extends ControllerBaseTest{
         CreateUserDTO createUserDTO = new CreateUserDTO("username", "password", sqlDate);
 
         doNothing().when(authenticationService).signUp(any(User.class));
+        given(userService.isUsernameExist(createUserDTO.getUsername())).willReturn(false);
 
         this.mockMvc.perform(post("/auth/sign_up")
                         .contentType(MediaType.APPLICATION_JSON)
