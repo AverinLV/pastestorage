@@ -16,6 +16,10 @@ env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
   DB_IP: ${{ vars.DB_IP }}
   JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  PROJECT_ID: thematic-bloom-378812
+  SERVICE: pastestorage
+  REGION: europe-west8
+  DOCKER_PROJECT: averinlv
 
 jobs:
   build:
