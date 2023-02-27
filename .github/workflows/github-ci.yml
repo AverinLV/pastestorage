@@ -55,6 +55,7 @@ jobs:
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
 
   deploy:
+    needs: build
     if: github.ref == 'refs/heads/main'
     permissions:
       contents: 'read'
