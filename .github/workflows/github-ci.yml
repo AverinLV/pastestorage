@@ -48,7 +48,7 @@ jobs:
             DB_IP=${{ env.DB_IP }}
             JWT_SECRET=${{ env.JWT_SECRET }}
           push: true
-          tags: ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
 
   deploy:
     needs: build
@@ -76,7 +76,7 @@ jobs:
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
-          image: ${{ env.DOCKER_PROJECT }}/${{ env.SERVICE }}
+          image: ${{ env.DOCKER_PROJECT }}/${{ env.SERVICE }}:main
 
       # If required, use the Cloud Run url output in later steps
       - name: Show Output
