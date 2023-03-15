@@ -1,3 +1,5 @@
+![](https://github.com/AverinLV/pastestorage/actions/workflows/github-ci.yml/badge.svg)
+[![LinkedIn][linkedin-shield]][linkedin-url]
 # About
 This project is a sample REST API backend for a pastebin-like service. I've developed it only for self-educational reasons. With this service, you can upload chunks of text and get a short link to share with others.
 
@@ -67,4 +69,8 @@ Run it. You can specify any parameters you'd like
 ```
 docker run --name pastestorage_docker -p 8080:8080 -d -e DB_API=localhost -e JWT_SECRET=secret -e DB_USER=myuser -e DB_PASSWORD=postgres averinlv/pastestorage:main
 ```
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://www.linkedin.com/in/lev-averin/
