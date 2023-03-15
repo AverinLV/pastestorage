@@ -33,6 +33,9 @@ Project repository contains GitHub Actions workflow which does following:
 * Build Docker image and push it to Docker Hub
 * Deploy on Google Cloud Platform
 
+# Swagger UI
+
+You can access Swagger docs [here](https://averinlv.github.io/pastestorage/)
 
 # Authentication 
 
