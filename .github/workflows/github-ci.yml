@@ -12,6 +12,8 @@ env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
   DB_IP: ${{ vars.DB_IP }}
   JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  DB_USER: ${{ vars.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
   PROJECT_ID: thematic-bloom-378812
   SERVICE: pastestorage
   REGION: europe-west8
@@ -47,6 +49,8 @@ jobs:
             JAR_FILE=./build/libs/${{ env.JAR_NAME }}
             DB_IP=${{ env.DB_IP }}
             JWT_SECRET=${{ env.JWT_SECRET }}
+            DB_USER=${{ env.DB_USER }}
+            DB_PASSWORD=${{ env.DB_PASSWORD }}
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
 
