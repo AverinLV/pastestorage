@@ -47,6 +47,12 @@ The server verifies the token's signature to ensure its authenticity and extract
 
 With JWT authentication and authorization, my service provides a secure and scalable way to authenticate and authorize users. It reduces server-side storage requirements, improves performance, and simplifies user management. Additionally, the use of JWT allows for easy integration with third-party services and mobile applications.
 
+# Google Cloud Platform
+
+Application and its database are deployed on GCP. 
+
+I've used Cloud Run for hosting service itself and Compute Engine for database
+
 # Getting started
 
 Service running on GCP, but if you want to deploy it locally on your PC you can simply do it by performing following steps:
